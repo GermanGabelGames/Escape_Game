@@ -46,25 +46,12 @@ body {
   margin: 0;
   background: #eee;
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
   height: 100vh;
-  gap: 10px;
 }
 
-/* Vollbild-Button */
-#startFullscreen {
-  z-index: 2;
-  padding: 8px 16px;
-  border-radius: 999px;
-  border: none;
-  background: #4cb8b6;
-  color: white;
-  font-weight: bold;
-  cursor: pointer;
-}
-
+/* Handy */
 .phone {
   width: 300px;
   height: 600px;
@@ -77,6 +64,7 @@ body {
   z-index: 1;
 }
 
+/* Header: wird beim Login ausgeblendet (per JS Klasse .hidden) */
 .header {
   background: #222;
   color: #fff;
@@ -91,6 +79,10 @@ body {
   gap: 8px;
 }
 
+.header.hidden {
+  display: none;
+}
+
 #profile_pic {
   width: 40px;
   height: 40px;
@@ -98,20 +90,24 @@ body {
   vertical-align: middle;
 }
 
+/* Screen-Bereich im Handy */
 .screen {
   flex: 1;
+  position: relative;
+  overflow: hidden;     /* kein weißer Streifen / alles im Screen */
   background: #f0f0f0;
-  padding: 20px;
-  box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  min-height: 0; /* wichtig für scrollbaren Flex-Child */
+  min-height: 0;
 }
 
+/* Chat darunter */
 .chat {
   flex: 1;
   min-height: 0;
   overflow-y: auto;
+  padding: 20px;
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -137,11 +133,11 @@ body {
 
 .options {
   display: grid;
-  grid-template-columns: 1fr 1fr; /* zwei Spalten */
-  grid-template-rows: auto auto;  /* zwei Reihen */
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto auto;
   gap: 10px;
   padding: 10px;
-  background: #ddd;
+  background: #222;
   border-radius: 0 0 24px 24px;
 }
 
@@ -153,4 +149,125 @@ body {
   color: #fff;
   font-weight: bold;
   cursor: pointer;
+}
+
+/* Login-Overlay NUR im Screen */
+#loginOverlay {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* verschwommenes Wallpaper mit grauem Filter, nur im Screen */
+.login-bg {
+  position: absolute;
+  inset: 0;
+  background-image: url(img/wallpaper.png);
+  background-size: cover;
+  background-position: center;
+  filter: blur(8px);
+  transform: scale(1.15);     /* gegen weiße Kanten beim Blur */
+}
+
+.login-bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(40, 40, 40, 0.6);
+}
+
+/* Inhalt (Numpad + Punkte) */
+.login-content {
+  position: relative;
+  z-index: 1;
+  width: 80%;
+  max-width: 240px;
+  padding: 16px 16px 18px;
+  border-radius: 18px;
+  background: rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(4px);
+  color: #fff;
+  font-family: sans-serif;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+/* neuer Zeit-Container (separates Compartment über dem Numpad) */
+.time-container {
+  margin-bottom: 8px;
+}
+
+.lock-time {
+  font-size: 26px;
+  font-weight: 600;
+}
+
+.lock-subtext {
+  font-size: 11px;
+  opacity: 0.8;
+}
+
+/* dein h2 bleibt, nur etwas Abstand */
+.login-content h2 {
+  margin: 8px 0 10px;
+  font-size: 16px;
+}
+
+/* PIN-Punkte */
+.pin-dots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.pin-dots .dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.6);
+  background: transparent;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.pin-dots .dot.filled {
+  background: #fff;
+  border-color: #fff;
+}
+
+.login-message {
+  min-height: 18px;
+  font-size: 11px;
+  color: #ffaaaa;
+  margin-bottom: 8px;
+}
+
+/* Numpad im Handy-Format – nur leicht nach unten verschoben */
+.numpad {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-top: 4px;   /* kleine Verschiebung nach unten */
+}
+
+.numpad button {
+  padding: 8px 0;
+  font-size: 18px;
+  border-radius: 999px;
+  border: none;
+  background: rgba(255, 255, 255, 0.18);
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.1s ease, transform 0.1s ease, opacity 0.1s ease;
+}
+
+/* Klick-Animation */
+.numpad button:active,
+.numpad button.pressed {
+  background: rgba(255, 255, 255, 0.35);
+  opacity: 0.8;
+  transform: scale(0.96);
 }

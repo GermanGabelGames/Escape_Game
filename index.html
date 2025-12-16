@@ -19,14 +19,52 @@
     <span class="ball"></span>
     <span class="ball"></span>
   </div>
+
   <div class="phone" id="phone">
-    <div class="header">
+    <div class="header" id="chatHeader">
       <img src="img/profile.png" alt="" id="profile_pic">
-      Klassenchat 100
+      Klassenchat 10
     </div>
+
+    <!-- Login-Overlay NUR im Handy-Screen -->
     <div class="screen">
+      <div id="loginOverlay">
+        <div class="login-bg"></div>
+        <div class="login-content">
+          <!-- NEUER Zeit-Bereich über dem Numpad -->
+          <div class="time-container">
+            <div class="lock-time" id="lockTime">00:00</div>
+            <div class="lock-subtext">Europe/Berlin</div>
+          </div>
+
+          <h2>Telefon entsperren</h2>
+          <div class="pin-dots" id="pinDots">
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+          </div>
+          <div class="login-message" id="loginMessage"></div>
+          <div class="numpad">
+            <button data-key="1">1</button>
+            <button data-key="2">2</button>
+            <button data-key="3">3</button>
+            <button data-key="4">4</button>
+            <button data-key="5">5</button>
+            <button data-key="6">6</button>
+            <button data-key="7">7</button>
+            <button data-key="8">8</button>
+            <button data-key="9">9</button>
+            <button data-action="clear">⌫</button>
+            <button data-key="0">0</button>
+            <button data-action="reset">↺</button>
+          </div>
+        </div>
+      </div>
+
       <div class="chat" id="chat"></div>
     </div>
+
     <div class="options">
       <!-- Buttons werden per JS gesetzt -->
     </div>
