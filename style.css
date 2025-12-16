@@ -119,8 +119,26 @@ body {
   border-radius: 20px;
   font-family: sans-serif;
   font-size: 14px;
+  /* default fallback background kept */
+  background: lightgreen;
+  color: #000;
 }
 
+/* Sender-Name (kleiner & grau) */
+.message .sender {
+  display: block;
+  font-size: 11px;
+  color: #6b6b6b;
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+
+/* content bleibt darunter */
+.message .content {
+  line-height: 1.2;
+}
+
+/* spezifische Farben für from/to als Fallback */
 .message.from {
   background: lightgreen;
   align-self: flex-start;

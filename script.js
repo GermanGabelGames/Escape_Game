@@ -5,23 +5,97 @@ const chat = document.getElementById('chat');
 const optionsContainer = document.querySelector('.options');
 const chatHeader = document.getElementById('chatHeader');
 
+// --- Persistenz-Helpers ---
+const STORAGE_KEY = 'escapeGame.state';
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return { unlocked: false, currentId: 1 };
+    return JSON.parse(raw);
+  } catch (e) {
+    return { unlocked: false, currentId: 1 };
+  }
+}
+
+function saveState(state) {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  } catch (e) { /* ignore */ }
+}
+
+function clearStateAndReload() {
+  try {
+    localStorage.removeItem(STORAGE_KEY);
+  } catch (e) {}
+  location.reload();
+}
+
+// Expose "reset" in console: wenn du in der DevTools-Konsole "reset" eingibst, wird gelöscht + neu geladen
+Object.defineProperty(window, 'reset', {
+  get() {
+    clearStateAndReload();
+    return 'Escape Game: reset triggered';
+  }
+});
+
+// --- initial state ---
+let appState = loadState();
+
 // Auto-Scroll im Chat
 function scrollToBottom() {
   chat.scrollTop = chat.scrollHeight;
 }
 
 // Chat-Funktionen
-function addMessage(text, type = "from") {
-  const msg = document.createElement("div");
-  msg.className = `message ${type}`;
-  msg.textContent = text;
-  chat.appendChild(msg);
+// jetzt mit optionalen Optionen: senderName, bubbleColor
+function addMessage(text, type = "from", opts = {}) {
+  const msgWrap = document.createElement("div");
+  msgWrap.className = `message ${type}`;
+
+  // sender anzeigen (nur bei 'from' Nachrichten)
+  if (type === "from" && opts.senderName) {
+    const senderEl = document.createElement("span");
+    senderEl.className = "sender";
+    senderEl.textContent = opts.senderName;
+    msgWrap.appendChild(senderEl);
+  }
+
+  const content = document.createElement("div");
+  content.className = "content";
+  content.textContent = text;
+  msgWrap.appendChild(content);
+
+  // Bubble-Farbe setzen, falls angegeben
+  if (opts.bubbleColor) {
+    msgWrap.style.background = opts.bubbleColor;
+    // bei sehr hellen Farben schwarzen Text bevorzugen (einfacher Kontrast-Check)
+    try {
+      const c = opts.bubbleColor.replace('#','');
+      if (c.length === 6) {
+        const r = parseInt(c.substr(0,2),16);
+        const g = parseInt(c.substr(2,2),16);
+        const b = parseInt(c.substr(4,2),16);
+        const luminance = (0.299*r + 0.587*g + 0.114*b);
+        msgWrap.style.color = luminance > 200 ? '#000' : '#000';
+      }
+    } catch(e) {}
+  }
+
+  chat.appendChild(msgWrap);
   scrollToBottom();
 }
 
 function loadQuestion(id) {
   currentQuestion = conversation.find(q => q.id === id);
-  addMessage(currentQuestion.question, "from");
+  if (!currentQuestion) return;
+
+  // Frage mit senderName und bubbleColor anzeigen
+  addMessage(currentQuestion.question, "from", { senderName: currentQuestion.sender, bubbleColor: currentQuestion.bubbleColor });
+
+  // State aktualisieren und speichern
+  appState.currentId = currentQuestion.id;
+  saveState(appState);
 
   optionsContainer.innerHTML = "";
   currentQuestion.options.forEach(opt => {
@@ -34,19 +108,39 @@ function loadQuestion(id) {
 }
 
 function handleAnswer(option) {
-  addMessage(option.text, "to");
+  // User-Antwort (to).
+  addMessage(option.text, "to", { senderName: option.sender, bubbleColor: option.bubbleColor });
+
+  // Wenn option.response === false --> keine Host-Antwort anzeigen, sonst wie bisher.
+  const willReply = option.response !== false;
+
+  // Kurzer Delay bis zur nächsten Aktion (kürzer, wenn keine Antwort ausgegeben wird)
+  const initialDelay = willReply ? 1000 : 250;
   setTimeout(() => {
-    addMessage(option.response, "from");
+    // Falls eine Antwort als String vorhanden ist, anzeigen
+    if (willReply && typeof option.response === "string" && option.response.length > 0) {
+      addMessage(option.response, "from", { senderName: currentQuestion.sender, bubbleColor: currentQuestion.bubbleColor });
+    }
+
+    // Nächste Aktion verzögern, damit die Nachricht sichtbar bleibt (oder sofort weiter wenn keine Antwort)
+    const nextDelay = willReply ? 1500 : 200;
+
     if (option.correct) {
       if (option.nextId) {
-        setTimeout(() => loadQuestion(option.nextId), 1500);
+        setTimeout(() => loadQuestion(option.nextId), nextDelay);
       } else {
-        addMessage("Spiel beendet 🎉", "from");
+        setTimeout(() => {
+          addMessage("Spiel beendet 🎉", "from", { senderName: currentQuestion.sender, bubbleColor: currentQuestion.bubbleColor });
+          // Spiel beendet -> optional State zurücksetzen oder auf null setzen
+          appState.currentId = null;
+          saveState(appState);
+        }, nextDelay);
       }
     } else {
-      setTimeout(() => loadQuestion(option.nextId), 1500);
+      // Bei falscher Antwort: zur angegebenen nextId (ggf. gleiche Frage)
+      setTimeout(() => loadQuestion(option.nextId), nextDelay);
     }
-  }, 1000);
+  }, initialDelay);
 }
 
 // Conversation laden (startet erst nach Login)
@@ -55,7 +149,9 @@ function startGame() {
     .then(res => res.json())
     .then(data => {
       conversation = data;
-      loadQuestion(1);
+      // Wenn ein gespeicherter currentId vorhanden ist -> dort fortsetzen
+      const startId = appState.currentId && Number.isInteger(appState.currentId) ? appState.currentId : 1;
+      loadQuestion(startId);
     });
 }
 
@@ -111,6 +207,9 @@ function handlePinSubmit() {
       loginOverlay.style.display = "none";
       // Header wieder anzeigen
       chatHeader.classList.remove("hidden");
+      // unlocked speichern
+      appState.unlocked = true;
+      saveState(appState);
       startGame();
     }, 400);
   } else {
@@ -122,8 +221,15 @@ function handlePinSubmit() {
   }
 }
 
-// Header während Login verstecken
-chatHeader.classList.add("hidden");
+// Header während Login verstecken, außer wenn schon unlocked
+if (appState.unlocked) {
+  chatHeader.classList.remove("hidden");
+  loginOverlay.style.display = "none";
+  // Spiel direkt starten, wenn unlocked
+  startGame();
+} else {
+  chatHeader.classList.add("hidden");
+}
 
 numpadButtons.forEach(btn => {
   btn.addEventListener("click", () => {

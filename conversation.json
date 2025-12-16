@@ -1,16 +1,20 @@
 [
   {
     "id": 1,
+    "sender": "Joachim",
+    "bubbleColor": "#ff0000",
     "question": "Willkommen im Escape Game! Bist du bereit?",
     "options": [
-      { "text": "Ja, sofort!", "correct": true, "response": "Super, los geht’s!", "nextId": 2 },
-      { "text": "Nein, lieber nicht.", "correct": false, "response": "Ohne dich geht es nicht! Versuch es nochmal.", "nextId": 1 },
+      { "text": "Ja, sofort!", "correct": true, "response": false, "nextId": 2 },
+      { "text": "Nein, lieber nicht.", "correct": false, "response": false, "nextId": 1 },
       { "text": "Vielleicht später.", "correct": false, "response": "Das Spiel wartet nicht! Versuch es nochmal.", "nextId": 1 },
       { "text": "Was ist ein Escape Game?", "correct": false, "response": "Das erkläre ich später – erst musst du starten!", "nextId": 1 }
     ]
   },
   {
     "id": 2,
+    "sender": "Joachim",
+    "bubbleColor": "#ff0000",
     "question": "Du stehst vor einer verschlossenen Tür. Was machst du?",
     "options": [
       { "text": "Ich suche einen Schlüssel.", "correct": true, "response": "Gut gemacht, du findest einen Schlüssel!", "nextId": 3 },
@@ -21,6 +25,8 @@
   },
   {
     "id": 3,
+    "sender": "Joachim",
+    "bubbleColor": "#ff0000",
     "question": "Du hast den Schlüssel. Was öffnest du?",
     "options": [
       { "text": "Die Tür.", "correct": true, "response": "Die Tür öffnet sich – du bist frei!", "nextId": null },
