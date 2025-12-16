@@ -197,12 +197,13 @@ body {
 
 /* neuer Zeit-Container (separates Compartment über dem Numpad) */
 .time-container {
-  margin-bottom: 8px;
+  margin-bottom: 130px;
 }
 
 .lock-time {
-  font-size: 26px;
+  font-size: 70px;
   font-weight: 600;
+  margin-top: 35px;
 }
 
 .lock-subtext {
