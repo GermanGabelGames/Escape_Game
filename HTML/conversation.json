@@ -1,0 +1,32 @@
+[
+  {
+    "id": 1,
+    "question": "Willkommen im Escape Game! Bist du bereit?",
+    "options": [
+      { "text": "Ja, sofort!", "correct": true, "response": "Super, los geht’s!", "nextId": 2 },
+      { "text": "Nein, lieber nicht.", "correct": false, "response": "Ohne dich geht es nicht! Versuch es nochmal.", "nextId": 1 },
+      { "text": "Vielleicht später.", "correct": false, "response": "Das Spiel wartet nicht! Versuch es nochmal.", "nextId": 1 },
+      { "text": "Was ist ein Escape Game?", "correct": false, "response": "Das erkläre ich später – erst musst du starten!", "nextId": 1 }
+    ]
+  },
+  {
+    "id": 2,
+    "question": "Du stehst vor einer verschlossenen Tür. Was machst du?",
+    "options": [
+      { "text": "Ich suche einen Schlüssel.", "correct": true, "response": "Gut gemacht, du findest einen Schlüssel!", "nextId": 3 },
+      { "text": "Ich klopfe an.", "correct": false, "response": "Niemand antwortet. Versuch es nochmal.", "nextId": 2 },
+      { "text": "Ich trete die Tür ein.", "correct": false, "response": "Die Tür ist zu stabil. Versuch es nochmal.", "nextId": 2 },
+      { "text": "Ich gehe zurück.", "correct": false, "response": "Zurück ist keine Option. Versuch es nochmal.", "nextId": 2 }
+    ]
+  },
+  {
+    "id": 3,
+    "question": "Du hast den Schlüssel. Was öffnest du?",
+    "options": [
+      { "text": "Die Tür.", "correct": true, "response": "Die Tür öffnet sich – du bist frei!", "nextId": null },
+      { "text": "Eine Truhe.", "correct": false, "response": "Die Truhe ist leer. Versuch es nochmal.", "nextId": 3 },
+      { "text": "Ein Fenster.", "correct": false, "response": "Das Fenster ist verschlossen. Versuch es nochmal.", "nextId": 3 },
+      { "text": "Gar nichts.", "correct": false, "response": "Dann bleibst du gefangen. Versuch es nochmal.", "nextId": 3 }
+    ]
+  }
+]
