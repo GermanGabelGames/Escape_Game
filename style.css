@@ -215,13 +215,13 @@ body {
 
 /* neuer Zeit-Container (separates Compartment über dem Numpad) */
 .time-container {
-  margin-bottom: 130px;
+  margin-bottom: 20px;
 }
 
 .lock-time {
   font-size: 70px;
   font-weight: 600;
-  margin-top: 35px;
+  margin-top: 15px;
 }
 
 .lock-subtext {
@@ -232,7 +232,7 @@ body {
 /* dein h2 bleibt, nur etwas Abstand */
 .login-content h2 {
   margin: 8px 0 10px;
-  font-size: 16px;
+  font-size: 14px;
 }
 
 /* PIN-Punkte */

@@ -157,7 +157,7 @@ function startGame() {
 
 /* ------- PIN / Login-Overlay ------- */
 
-const CORRECT_PIN = "1111";
+const CORRECT_PIN = "3196";
 
 const loginOverlay = document.getElementById("loginOverlay");
 const pinDots = Array.from(document.querySelectorAll("#pinDots .dot"));
