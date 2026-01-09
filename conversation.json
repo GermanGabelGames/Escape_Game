@@ -1,38 +1,50 @@
 [
   {
     "id": 1,
-    "sender": "Joachim",
-    "bubbleColor": "#ff0000",
-    "question": "Willkommen im Escape Game! Bist du bereit?",
+    "sender": "~Riete Fomei",
+    "bubbleColor": "#c71212",
+    "question": " Jungs, kommt online jetzt und fokussiert euch auf Fortnite! ",
     "options": [
-      { "text": "Ja, sofort!", "correct": true, "response": false, "nextId": 2 },
-      { "text": "Nein, lieber nicht.", "correct": false, "response": false, "nextId": 1 },
-      { "text": "Vielleicht später.", "correct": false, "response": "Das Spiel wartet nicht! Versuch es nochmal.", "nextId": 1 },
-      { "text": "Was ist ein Escape Game?", "correct": false, "response": "Das erkläre ich später – erst musst du starten!", "nextId": 1 }
+      { "text": "Hallo, ich bin der Neue. Könnt ihr mir bitte sagen, in welchem Raum wir Unterricht haben.  Danke 😊.!", "correct": true, "response": " Ähm, Nein.", "nextId": 2 },
+      { "text": "Lasst mal bitte die Raumnummer Rüberwachsen ihr NPCs!", "correct": true, "response": "Warum sollte ich, Maincharacter, einem NPC wie dir den Raum sagen?" , "nextId": 2 },
+      { "text": "Wäre einer von euch edlen Damen und Herren bitte so freundlich mir die Nummer der Räumlichkeit zu nennen, in der wir den nächsten Block gemeinsam verbringen werden?.", "correct": true, "response": "Werter Mitschüler, leider muss ich dir mitteilen das, dass von dir gewünschte mir nicht möglich ist.", "nextId": 2 },
+      { "text": "Jungs schickt mal Raum!", "correct": true, "response": "Kein Bock!", "nextId": 2 }
     ]
   },
   {
     "id": 2,
-    "sender": "Joachim",
-    "bubbleColor": "#ff0000",
-    "question": "Du stehst vor einer verschlossenen Tür. Was machst du?",
+    "sender": "~Rainer Zufall",
+    "bubbleColor": "##3d5491",
+    "question": "Da, wo du nicht bist! ",
     "options": [
-      { "text": "Ich suche einen Schlüssel.", "correct": true, "response": "Gut gemacht, du findest einen Schlüssel!", "nextId": 3 },
-      { "text": "Ich klopfe an.", "correct": false, "response": "Niemand antwortet. Versuch es nochmal.", "nextId": 2 },
-      { "text": "Ich trete die Tür ein.", "correct": false, "response": "Die Tür ist zu stabil. Versuch es nochmal.", "nextId": 2 },
-      { "text": "Ich gehe zurück.", "correct": false, "response": "Zurück ist keine Option. Versuch es nochmal.", "nextId": 2 }
+      { "text": "Bitte.", "correct": true, "response": "...", "nextId": 3 },
+      { "text": "Mach jetzt sonst gibt es eine Saftige Schelle!", "correct": true, "response": "Noch so´n Ding Augenring!", "nextId": 3 },
+      { "text": "Gönnt doch mal bitte!", "correct": true, "response": "Wir sind hier nicht bei wünsch dir was!", "nextId": 3 },
+      { "text": "Ich wäre euch weiterhin sehr Dankbar, wenn ihr mir die Raumnummer schreiben könntet", "correct": true, "response": "Zurück ist keine Option. Versuch es nochmal.", "nextId": 3 }
     ]
   },
   {
     "id": 3,
-    "sender": "Joachim",
-    "bubbleColor": "#ff0000",
-    "question": "Du hast den Schlüssel. Was öffnest du?",
+    "sender": "~Schlafparalysen Pascal",
+    "bubbleColor": "#ba169c",
+    "question": "Ha ha, denkst du wirklich wir schreiben dir einfach so, wo wir Unterricht haben? Aber ich will mal nicht so sein. Doch zuerst musst dich dafür erst noch beweisen, Neuling! Ich hoffe für dich, du hast im Informatikunterricht gut aufgepasst!",
     "options": [
-      { "text": "Die Tür.", "correct": true, "response": "Die Tür öffnet sich – du bist frei!", "nextId": null },
-      { "text": "Eine Truhe.", "correct": false, "response": "Die Truhe ist leer. Versuch es nochmal.", "nextId": 3 },
-      { "text": "Ein Fenster.", "correct": false, "response": "Das Fenster ist verschlossen. Versuch es nochmal.", "nextId": 3 },
-      { "text": "Gar nichts.", "correct": false, "response": "Dann bleibst du gefangen. Versuch es nochmal.", "nextId": 3 }
+      { "text": "?", "correct": true, "response": "Laufe zu der Bank die gegen Rassismus steht.", "nextId": 4 },
+      { "text": "Was soll ich denn machen?", "correct": true, "response": "Bewege dich zu einem Platz, wo 'kein Platz für Rassismus' steht!", "nextId": 4 },
+      { "text": "Du H********!", "correct": false, "response": false, "nextId": 3 },
+      { "text": "Was soll dass?", "correct": false, "response": false, "nextId": 3 }
+    ]
+  },
+  {
+    "id": 4,
+    "sender": "~Schlafparalysen Pascal",
+    "bubbleColor": "#ba169c",
+    "question": "Sobald du dort bist, löse das Rätsel: Zähle die Lampen in Blickrichtung auf Raum 109. Lese sie von links nach rechts. Jede Lampe steht für eine '1'. Ein Zwischenbalken stellt eine '0' dar. Nutze ein passendes Zahlensystem und wandle die Zahl in das Dezimalsystem um.",
+    "options": [
+      { "text": "?", "correct": true, "response": false, "nextId": 4 },
+      { "text": "Was soll ich denn machen?", "correct": true, "response": false, "nextId": 4 },
+      { "text": "Du ********!", "correct": false, "response": false, "nextId": 3 },
+      { "text": "Was soll dass?", "correct": false, "response": false, "nextId": 3 }
     ]
   }
 ]

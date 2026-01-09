@@ -179,7 +179,7 @@ function updateLockTime() {
   lockTimeEl.textContent = formatter.format(now);
 }
 updateLockTime();
-setInterval(updateLockTime, 30000); // alle 30 Sekunden aktualisieren [web:189][web:184]
+setInterval(updateLockTime, 10000); // alle 30 Sekunden aktualisieren [web:189][web:184]
 
 function updateDots() {
   pinDots.forEach((dot, index) => {
