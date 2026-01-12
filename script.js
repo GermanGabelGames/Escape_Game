@@ -1,5 +1,9 @@
+const STORAGE_KEY = 'escapeGame.state';
+const CHAT_STORAGE_KEY = 'escapeGame.chat';
+
 let conversation = [];
 let currentQuestion = null;
+let isWaitingForResponse = false; // Cooldown-Flag
 
 const chat = document.getElementById('chat');
 const optionsContainer = document.querySelector('.options');
@@ -9,7 +13,6 @@ const submitInput = document.getElementById('submitInput');
 const chatHeader = document.getElementById('chatHeader');
 
 // --- Persistenz-Helpers ---
-const STORAGE_KEY = 'escapeGame.state';
 
 function loadState() {
   try {
@@ -27,14 +30,31 @@ function saveState(state) {
   } catch (e) { /* ignore */ }
 }
 
+function loadChatHistory() {
+  try {
+    const raw = localStorage.getItem(CHAT_STORAGE_KEY);
+    if (!raw) return [];
+    return JSON.parse(raw);
+  } catch (e) {
+    return [];
+  }
+}
+
+function saveChatHistory(messages) {
+  try {
+    localStorage.setItem(CHAT_STORAGE_KEY, JSON.stringify(messages));
+  } catch (e) { /* ignore */ }
+}
+
 function clearStateAndReload() {
   try {
     localStorage.removeItem(STORAGE_KEY);
+    localStorage.removeItem(CHAT_STORAGE_KEY);
   } catch (e) {}
   location.reload();
 }
 
-// Expose "reset" in console: wenn du in der DevTools-Konsole "reset" eingibst, wird gelöscht + neu geladen
+// Expose "reset" in console
 Object.defineProperty(window, 'reset', {
   get() {
     clearStateAndReload();
@@ -44,14 +64,14 @@ Object.defineProperty(window, 'reset', {
 
 // --- initial state ---
 let appState = loadState();
+let chatHistory = []; // Speichert alle Nachrichten
 
 // Auto-Scroll im Chat
 function scrollToBottom() {
   chat.scrollTop = chat.scrollHeight;
 }
 
-// Chat-Funktionen
-// jetzt mit optionalen Optionen: senderName, bubbleColor
+// Chat-Funktionen mit Geschichte
 function addMessage(text, type = "from", opts = {}) {
   const msgWrap = document.createElement("div");
   msgWrap.className = `message ${type}`;
@@ -66,54 +86,157 @@ function addMessage(text, type = "from", opts = {}) {
 
   const content = document.createElement("div");
   content.className = "content";
-  content.textContent = text;
+  
+  // Prüfe ob es eine URL ist
+  const isUrl = /^(https?:\/\/)|(www\.)/.test(text);
+  if (isUrl) {
+    const link = document.createElement("a");
+    link.href = text.startsWith("http") ? text : "https://" + text;
+    link.textContent = text;
+    link.target = "_blank";
+    link.style.color = "#0066cc";
+    link.style.textDecoration = "underline";
+    link.style.cursor = "pointer";
+    content.appendChild(link);
+  } else {
+    content.textContent = text;
+  }
+  
   msgWrap.appendChild(content);
 
   // Bubble-Farbe setzen, falls angegeben
   if (opts.bubbleColor) {
     msgWrap.style.background = opts.bubbleColor;
-    // bei sehr hellen Farben schwarzen Text bevorzugen (einfacher Kontrast-Check)
-    try {
-      const c = opts.bubbleColor.replace('#','');
-      if (c.length === 6) {
-        const r = parseInt(c.substr(0,2),16);
-        const g = parseInt(c.substr(2,2),16);
-        const b = parseInt(c.substr(4,2),16);
-        const luminance = (0.299*r + 0.587*g + 0.114*b);
-        msgWrap.style.color = luminance > 200 ? '#000' : '#000';
-      }
-    } catch(e) {}
   }
 
   chat.appendChild(msgWrap);
+
+  // Speichere Nachricht in Geschichte
+  chatHistory.push({
+    text: text,
+    type: type,
+    senderName: opts.senderName || null,
+    bubbleColor: opts.bubbleColor || null,
+    isImage: false,
+    isUrl: isUrl
+  });
+  saveChatHistory(chatHistory);
+
+  scrollToBottom();
+}
+
+function addImageMessage(imageSrc, bubbleColor) {
+  const imgWrap = document.createElement("div");
+  imgWrap.className = "message from";
+  imgWrap.style.background = bubbleColor;
+  imgWrap.style.maxWidth = "100%";
+  imgWrap.style.padding = "8px";
+  
+  const img = document.createElement("img");
+  img.src = imageSrc;
+  img.style.width = "100%";
+  img.style.borderRadius = "12px";
+  img.style.maxHeight = "250px";
+  img.style.objectFit = "contain";
+  
+  imgWrap.appendChild(img);
+  chat.appendChild(imgWrap);
+
+  // Speichere Bild in Geschichte
+  chatHistory.push({
+    text: imageSrc,
+    type: "from",
+    senderName: null,
+    bubbleColor: bubbleColor,
+    isImage: true
+  });
+  saveChatHistory(chatHistory);
+
+  scrollToBottom();
+}
+
+function restoreChatHistory() {
+  chatHistory = loadChatHistory();
+  
+  chatHistory.forEach(msg => {
+    if (msg.isImage) {
+      const imgWrap = document.createElement("div");
+      imgWrap.className = "message from";
+      imgWrap.style.background = msg.bubbleColor;
+      imgWrap.style.maxWidth = "100%";
+      imgWrap.style.padding = "8px";
+      
+      const img = document.createElement("img");
+      img.src = msg.text;
+      img.style.width = "100%";
+      img.style.borderRadius = "12px";
+      img.style.maxHeight = "250px";
+      img.style.objectFit = "contain";
+      
+      imgWrap.appendChild(img);
+      chat.appendChild(imgWrap);
+    } else {
+      const msgWrap = document.createElement("div");
+      msgWrap.className = `message ${msg.type}`;
+
+      if (msg.type === "from" && msg.senderName) {
+        const senderEl = document.createElement("span");
+        senderEl.className = "sender";
+        senderEl.textContent = msg.senderName;
+        msgWrap.appendChild(senderEl);
+      }
+
+      const content = document.createElement("div");
+      content.className = "content";
+      
+      // Prüfe ob es eine URL ist
+      if (msg.isUrl) {
+        const link = document.createElement("a");
+        link.href = msg.text;
+        link.textContent = msg.text;
+        link.target = "_blank";
+        link.style.color = "#0066cc";
+        link.style.textDecoration = "underline";
+        link.style.cursor = "pointer";
+        content.appendChild(link);
+      } else {
+        content.textContent = msg.text;
+      }
+      
+      msgWrap.appendChild(content);
+
+      if (msg.bubbleColor) {
+        msgWrap.style.background = msg.bubbleColor;
+      }
+
+      chat.appendChild(msgWrap);
+    }
+  });
+  
   scrollToBottom();
 }
 
 function loadQuestion(id) {
+  // Cooldown: Wenn noch gewartet werden muss, nichts tun
+  if (isWaitingForResponse) return;
+
   currentQuestion = conversation.find(q => q.id === id);
   if (!currentQuestion) return;
 
-  // Frage mit senderName und bubbleColor anzeigen
-  addMessage(currentQuestion.question, "from", { senderName: currentQuestion.sender, bubbleColor: currentQuestion.bubbleColor });
+  // Prüfe ob diese Frage bereits in der Chat-Historie vorhanden ist
+  const questionExists = chatHistory.some(msg => 
+    msg.text === currentQuestion.question && 
+    msg.senderName === currentQuestion.sender
+  );
 
-  // Wenn Bild vorhanden, anzeigen
-  if (currentQuestion.image) {
-    const imgWrap = document.createElement("div");
-    imgWrap.className = "message from";
-    imgWrap.style.background = currentQuestion.bubbleColor;
-    imgWrap.style.maxWidth = "100%";
-    imgWrap.style.padding = "8px";
-    
-    const img = document.createElement("img");
-    img.src = currentQuestion.image;
-    img.style.width = "100%";
-    img.style.borderRadius = "12px";
-    img.style.maxHeight = "250px";
-    img.style.objectFit = "contain";
-    
-    imgWrap.appendChild(img);
-    chat.appendChild(imgWrap);
-    scrollToBottom();
+  // Lade Frage nur wenn sie noch nicht da ist
+  if (!questionExists) {
+    addMessage(currentQuestion.question, "from", { senderName: currentQuestion.sender, bubbleColor: currentQuestion.bubbleColor });
+
+    // Wenn Bild vorhanden, anzeigen
+    if (currentQuestion.image) {
+      addImageMessage(currentQuestion.image, currentQuestion.bubbleColor);
+    }
   }
 
   // State aktualisieren und speichern
@@ -127,12 +250,14 @@ function loadQuestion(id) {
   if (currentQuestion.inputField) {
     userInput.placeholder = currentQuestion.inputField.placeholder || "Deine Antwort...";
     userInput.value = "";
+    userInput.disabled = false;
+    submitInput.disabled = false;
     inputFieldWrapper.style.display = "flex";
 
     // Input-Submit Handler
     submitInput.onclick = () => handleInputSubmit(currentQuestion.inputField);
     userInput.onkeypress = (e) => {
-      if (e.key === "Enter") {
+      if (e.key === "Enter" && !isWaitingForResponse) {
         handleInputSubmit(currentQuestion.inputField);
       }
     };
@@ -141,7 +266,12 @@ function loadQuestion(id) {
     currentQuestion.options.forEach(opt => {
       const btn = document.createElement("button");
       btn.textContent = opt.text;
-      btn.addEventListener("click", () => handleAnswer(opt));
+      btn.disabled = isWaitingForResponse;
+      btn.addEventListener("click", () => {
+        if (!isWaitingForResponse) {
+          handleAnswer(opt);
+        }
+      });
       optionsContainer.appendChild(btn);
     });
   }
@@ -149,7 +279,13 @@ function loadQuestion(id) {
 }
 
 function handleInputSubmit(inputFieldConfig) {
+  // Spam-Protection: Wenn schon gewartet wird, ignorieren
+  if (isWaitingForResponse) return;
+
   const userAnswer = userInput.value.trim();
+  if (!userAnswer) return;
+
+  isWaitingForResponse = true;
 
   // User-Antwort anzeigen
   addMessage(userAnswer, "to", { senderName: "Du", bubbleColor: "#4cb8b6" });
@@ -166,6 +302,8 @@ function handleInputSubmit(inputFieldConfig) {
     addMessage(response, "from", { senderName: currentQuestion.sender, bubbleColor: currentQuestion.bubbleColor });
 
     setTimeout(() => {
+      isWaitingForResponse = false;
+
       if (nextId) {
         loadQuestion(nextId);
       } else {
@@ -178,47 +316,55 @@ function handleInputSubmit(inputFieldConfig) {
 }
 
 function handleAnswer(option) {
+  // Spam-Protection: Wenn schon gewartet wird, ignorieren
+  if (isWaitingForResponse) return;
+
+  isWaitingForResponse = true;
+
   // User-Antwort (to).
   addMessage(option.text, "to", { senderName: option.sender, bubbleColor: option.bubbleColor });
 
-  // Wenn option.response === false --> keine Host-Antwort anzeigen, sonst wie bisher.
   const willReply = option.response !== false;
-
-  // Kurzer Delay bis zur nächsten Aktion (kürzer, wenn keine Antwort ausgegeben wird)
   const initialDelay = willReply ? 1000 : 250;
+
   setTimeout(() => {
-    // Falls eine Antwort als String vorhanden ist, anzeigen
     if (willReply && typeof option.response === "string" && option.response.length > 0) {
       addMessage(option.response, "from", { senderName: currentQuestion.sender, bubbleColor: currentQuestion.bubbleColor });
     }
 
-    // Nächste Aktion verzögern, damit die Nachricht sichtbar bleibt (oder sofort weiter wenn keine Antwort)
     const nextDelay = willReply ? 1500 : 200;
 
     if (option.correct) {
       if (option.nextId) {
-        setTimeout(() => loadQuestion(option.nextId), nextDelay);
+        setTimeout(() => {
+          isWaitingForResponse = false;
+          loadQuestion(option.nextId);
+        }, nextDelay);
       } else {
         setTimeout(() => {
           addMessage("Spiel beendet 🎉", "from", { senderName: currentQuestion.sender, bubbleColor: currentQuestion.bubbleColor });
-          // Spiel beendet -> optional State zurücksetzen oder auf null setzen
           appState.currentId = null;
           saveState(appState);
+          isWaitingForResponse = false;
         }, nextDelay);
       }
     } else {
-      // Bei falscher Antwort: zur angegebenen nextId (ggf. gleiche Frage)
-      setTimeout(() => loadQuestion(option.nextId), nextDelay);
+      setTimeout(() => {
+        isWaitingForResponse = false;
+        loadQuestion(option.nextId);
+      }, nextDelay);
     }
   }, initialDelay);
 }
 
-// Conversation laden (startet erst nach Login)
+// Conversation laden
 function startGame() {
   fetch("conversation.json")
     .then(res => res.json())
     .then(data => {
       conversation = data;
+      // Lade alte Chat-Geschichte
+      restoreChatHistory();
       // Wenn ein gespeicherter currentId vorhanden ist -> dort fortsetzen
       const startId = appState.currentId && Number.isInteger(appState.currentId) ? appState.currentId : 1;
       loadQuestion(startId);
@@ -295,7 +441,6 @@ function handlePinSubmit() {
 if (appState.unlocked) {
   chatHeader.classList.remove("hidden");
   loginOverlay.style.display = "none";
-  // Spiel direkt starten, wenn unlocked
   startGame();
 } else {
   chatHeader.classList.add("hidden");

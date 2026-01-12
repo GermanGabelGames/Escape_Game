@@ -7,7 +7,7 @@
     "options": [
       { "text": "Hallo, ich bin der Neue. Könnt ihr mir bitte sagen, in welchem Raum wir Unterricht haben.  Danke 😊.!", "correct": true, "response": " Ähm, Nein.", "nextId": 2 },
       { "text": "Lasst mal bitte die Raumnummer Rüberwachsen ihr NPCs!", "correct": true, "response": "Warum sollte ich, Maincharacter, einem NPC wie dir den Raum sagen?" , "nextId": 2 },
-      { "text": "Wäre einer von euch edlen Damen und Herren bitte so freundlich mir die Nummer der Räumlichkeit zu nennen, in der wir den nächsten Block gemeinsam verbringen werden?.", "correct": true, "response": "Werter Mitschüler, leider muss ich dir mitteilen das, dass von dir gewünschte mir nicht möglich ist.", "nextId": 2 },
+      { "text": "Wäre einer von euch bitte so freundlich mir die Nummer der Räumlichkeit zu nennen, in der wir den nächsten Block gemeinsam verbringen werden?.", "correct": true, "response": "Werter Mitschüler, leider muss ich dir mitteilen das, dass von dir gewünschte mir nicht möglich ist.", "nextId": 2 },
       { "text": "Jungs schickt mal Raum!", "correct": true, "response": "Kein Bock!", "nextId": 2 }
     ]
   },
@@ -37,17 +37,47 @@
   },
   {
     "id": 4,
-    "sender": "~Schlafparalysen Pascal",
-    "bubbleColor": "#ba169c",
+    "sender": "~Pavian Obsteimer",
+    "bubbleColor": "#3E838C",
     "question": "Sobald du dort bist, löse das Rätsel: Zähle die Lampen in Blickrichtung auf Raum 109. Lese sie von links nach rechts. Jede Lampe steht für eine '1'. Ein Zwischenbalken stellt eine '0' dar. Nutze ein passendes Zahlensystem und wandle die Zahl in das Dezimalsystem um.",
-    "image": "img/wallpaper.png",
     "inputField": {
-      "placeholder": "Deine Antwort...",
-      "correctAnswer": "3196",
-      "correctResponse": "Richtig! Sehr gut gelöst! 🎉",
-      "wrongResponse": "Das ist leider falsch. Versuche es nochmal!",
+      "placeholder": "Deine Zahl...",
+      "correctAnswer": "25",
+      "correctResponse": "Korrekt!",
+      "wrongResponse": "Diese Zahl kenne ich nicht!",
       "nextIdCorrect": 5,
       "nextIdWrong": 4
+    },
+    "options": []
+  },
+  {
+    "id": 5,
+    "sender": "~Schlafparalysen Pascal",
+    "bubbleColor": "#ba169c",
+    "question": "Nutze nun die Lösungszahl, um mit einer Verschlüsselungsmethode, die nach einem römischem Herrscher benannt wurde, das nächste Lösungswort zu finden. Das Wort lautet: udqshjzkqnshdqdmcdqehrbg",
+    "inputField": {
+      "placeholder": "Lösungswort...",
+      "correctAnswer": "vertikalrotierenderfisch",
+      "correctResponse": "Grr, woher weist du das? An dem Ort, wo die Übersetzung des Alphabetes hängt, kann man sich freuen, dass man morgen nicht so lange an diesem Ort sein muss. Übersetzte die Geheimsprache!",
+      "wrongResponse": "Dieser Wortgulasch soll das Lösungswort sein? Dass kannst du besser!",
+      "nextIdCorrect": 6,
+      "nextIdWrong": 5
+    },
+    "options": []
+  },
+  {
+    "id": 6,
+    "sender": "~Der GOAT",
+    "bubbleColor": "#B99ABE",
+    "image": "img/flaggen.png",
+    "question": "Übersetzte die Geheimsprache!",
+    "inputField": {
+      "placeholder": "Lösungswort...",
+      "correctAnswer": "finnisteinalpha",
+      "correctResponse": "Nicht schlecht, aber auch nicht besonders",
+      "wrongResponse": "Ähhm, Nein!",
+      "nextIdCorrect": 7,
+      "nextIdWrong": 6
     },
     "options": []
   }
