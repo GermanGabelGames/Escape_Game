@@ -26,7 +26,7 @@
 
   <div class="phone" id="phone">
     <div class="header" id="chatHeader">
-      <img src="img/profile.png" alt="" id="profile_pic">
+      <img src="img/profile.png" id="profile_pic">
       Klassenchat 10
     </div>
 
@@ -69,8 +69,14 @@
       <div class="chat" id="chat"></div>
     </div>
 
-    <div class="options">
+    <div class="options" id="optionsContainer">
       <!-- Buttons werden per JS gesetzt -->
+    </div>
+
+    <!-- Input-Feld für Antworten -->
+    <div class="input-field-wrapper" id="inputFieldWrapper" style="display: none;">
+      <input type="text" id="userInput" placeholder="Deine Antwort..." class="user-input">
+      <button id="submitInput" class="submit-btn">Absenden</button>
     </div>
   </div>
 </body>

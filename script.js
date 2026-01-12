@@ -3,6 +3,9 @@ let currentQuestion = null;
 
 const chat = document.getElementById('chat');
 const optionsContainer = document.querySelector('.options');
+const inputFieldWrapper = document.getElementById('inputFieldWrapper');
+const userInput = document.getElementById('userInput');
+const submitInput = document.getElementById('submitInput');
 const chatHeader = document.getElementById('chatHeader');
 
 // --- Persistenz-Helpers ---
@@ -93,18 +96,85 @@ function loadQuestion(id) {
   // Frage mit senderName und bubbleColor anzeigen
   addMessage(currentQuestion.question, "from", { senderName: currentQuestion.sender, bubbleColor: currentQuestion.bubbleColor });
 
+  // Wenn Bild vorhanden, anzeigen
+  if (currentQuestion.image) {
+    const imgWrap = document.createElement("div");
+    imgWrap.className = "message from";
+    imgWrap.style.background = currentQuestion.bubbleColor;
+    imgWrap.style.maxWidth = "100%";
+    imgWrap.style.padding = "8px";
+    
+    const img = document.createElement("img");
+    img.src = currentQuestion.image;
+    img.style.width = "100%";
+    img.style.borderRadius = "12px";
+    img.style.maxHeight = "250px";
+    img.style.objectFit = "contain";
+    
+    imgWrap.appendChild(img);
+    chat.appendChild(imgWrap);
+    scrollToBottom();
+  }
+
   // State aktualisieren und speichern
   appState.currentId = currentQuestion.id;
   saveState(appState);
 
   optionsContainer.innerHTML = "";
-  currentQuestion.options.forEach(opt => {
-    const btn = document.createElement("button");
-    btn.textContent = opt.text;
-    btn.addEventListener("click", () => handleAnswer(opt));
-    optionsContainer.appendChild(btn);
-  });
+  inputFieldWrapper.style.display = "none";
+
+  // Wenn inputField vorhanden, zeige Input statt Buttons
+  if (currentQuestion.inputField) {
+    userInput.placeholder = currentQuestion.inputField.placeholder || "Deine Antwort...";
+    userInput.value = "";
+    inputFieldWrapper.style.display = "flex";
+
+    // Input-Submit Handler
+    submitInput.onclick = () => handleInputSubmit(currentQuestion.inputField);
+    userInput.onkeypress = (e) => {
+      if (e.key === "Enter") {
+        handleInputSubmit(currentQuestion.inputField);
+      }
+    };
+  } else {
+    // Normal Button-Optionen
+    currentQuestion.options.forEach(opt => {
+      const btn = document.createElement("button");
+      btn.textContent = opt.text;
+      btn.addEventListener("click", () => handleAnswer(opt));
+      optionsContainer.appendChild(btn);
+    });
+  }
   scrollToBottom();
+}
+
+function handleInputSubmit(inputFieldConfig) {
+  const userAnswer = userInput.value.trim();
+
+  // User-Antwort anzeigen
+  addMessage(userAnswer, "to", { senderName: "Du", bubbleColor: "#4cb8b6" });
+
+  // Disable input
+  userInput.disabled = true;
+  submitInput.disabled = true;
+
+  setTimeout(() => {
+    const isCorrect = userAnswer.toLowerCase() === inputFieldConfig.correctAnswer.toLowerCase();
+    const response = isCorrect ? inputFieldConfig.correctResponse : inputFieldConfig.wrongResponse;
+    const nextId = isCorrect ? inputFieldConfig.nextIdCorrect : inputFieldConfig.nextIdWrong;
+
+    addMessage(response, "from", { senderName: currentQuestion.sender, bubbleColor: currentQuestion.bubbleColor });
+
+    setTimeout(() => {
+      if (nextId) {
+        loadQuestion(nextId);
+      } else {
+        addMessage("Spiel beendet 🎉", "from", { senderName: currentQuestion.sender, bubbleColor: currentQuestion.bubbleColor });
+        appState.currentId = null;
+        saveState(appState);
+      }
+    }, 1500);
+  }, 1000);
 }
 
 function handleAnswer(option) {

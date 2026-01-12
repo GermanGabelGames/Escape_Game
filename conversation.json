@@ -14,7 +14,7 @@
   {
     "id": 2,
     "sender": "~Rainer Zufall",
-    "bubbleColor": "##3d5491",
+    "bubbleColor": "#3d5491",
     "question": "Da, wo du nicht bist! ",
     "options": [
       { "text": "Bitte.", "correct": true, "response": "...", "nextId": 3 },
@@ -40,11 +40,15 @@
     "sender": "~Schlafparalysen Pascal",
     "bubbleColor": "#ba169c",
     "question": "Sobald du dort bist, löse das Rätsel: Zähle die Lampen in Blickrichtung auf Raum 109. Lese sie von links nach rechts. Jede Lampe steht für eine '1'. Ein Zwischenbalken stellt eine '0' dar. Nutze ein passendes Zahlensystem und wandle die Zahl in das Dezimalsystem um.",
-    "options": [
-      { "text": "?", "correct": true, "response": false, "nextId": 4 },
-      { "text": "Was soll ich denn machen?", "correct": true, "response": false, "nextId": 4 },
-      { "text": "Du ********!", "correct": false, "response": false, "nextId": 3 },
-      { "text": "Was soll dass?", "correct": false, "response": false, "nextId": 3 }
-    ]
+    "image": "img/wallpaper.png",
+    "inputField": {
+      "placeholder": "Deine Antwort...",
+      "correctAnswer": "3196",
+      "correctResponse": "Richtig! Sehr gut gelöst! 🎉",
+      "wrongResponse": "Das ist leider falsch. Versuche es nochmal!",
+      "nextIdCorrect": 5,
+      "nextIdWrong": 4
+    },
+    "options": []
   }
 ]
