@@ -1,83 +1,179 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Escape Game</title>
-  <link rel="stylesheet" href="style.css">
-  <script src="script.js" defer></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GabelSMP.Net - Minecraft Server</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="background">
-    <!-- Hintergrund-Bälle -->
-    <span class="ball"></span>
-    <span class="ball"></span>
-    <span class="ball"></span>
-    <span class="ball"></span>
-    <span class="ball"></span>
-    <span class="ball"></span>
-    <span class="ball"></span>
-    <span class="ball"></span>
-  </div>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo-section">
+                <img src="img/logo.png" alt="GabelSMP Logo" class="logo">
+            </div>
+            <h1 class="title">GabelSMP.Net</h1>
+            <p class="subtitle">Tritt unserem Minecraft-Server bei!</p>
+        </header>
 
-  <div class="teamname">  
-      
-  </div>
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Server Info -->
+            <section class="server-info">
+                <div class="info-card">
+                    <h2>Server IP</h2>
+                    <div class="ip-box" id="ipBox" onclick="copyToClipboard()">
+                        <span id="ipText">GabelSMP.Net</span>
+                        <span class="copy-icon">📋</span>
+                    </div>
+                    <p class="copy-hint">Klick zum Kopieren</p>
+                </div>
+            </section>
 
-  <div class="phone" id="phone">
-    <div class="header" id="chatHeader">
-      <img src="img/profile.png" id="profile_pic">
-      Klassenchat 10
+            <!-- Social Media Section -->
+            <section class="social-section">
+                <a href="https://discord.gg/" class="social-btn discord-btn" target="_blank">
+                    <img src="img/discord.png" alt="Discord" class="button-icon">
+                    Discord beitreten
+                </a>
+                <a href="https://www.twitch.tv/" class="social-btn twitch-btn" target="_blank">
+                    <img src="img/twitch.png" alt="Twitch" class="button-icon">
+                    Twitch beitreten
+                </a>
+                <a href="https://www.youtube.com/" class="social-btn youtube-btn" target="_blank">
+                    YouTube abonnieren
+                </a>
+                <a href="https://www.tiktok.com/" class="social-btn tiktok-btn" target="_blank">
+                    <img src="img/tiktok.png" alt="TikTok" class="button-icon">
+                    TikTok folgen
+                </a>
+            </section>
+
+            <!-- Features -->
+            <section class="features">
+                <h2>Features</h2>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <span class="feature-icon">⚔️</span>
+                        <h3>Vanilla Survival</h3>
+                        <p>Reines Vanilla-Spielerlebnis</p>
+                    </div>
+                    <div class="feature-card">
+                        <span class="feature-icon">👥</span>
+                        <h3>Community</h3>
+                        <p>Freundliche Spieler-Community</p>
+                    </div>
+                    <div class="feature-card">
+                        <span class="feature-icon">🎯</span>
+                        <h3>Abenteuer</h3>
+                        <p>Spannende Quests und Events</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>GabelSMP.Net</h4>
+                    <p>&copy; 2026 Alle Rechte vorbehalten.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Rechtliches</h4>
+                    <ul>
+                        <li><a href="#impressum" onclick="showImpressum()">Impressum</a></li>
+                        <li><a href="#datenschutz" onclick="showDatenschutz()">Datenschutz</a></li>
+                    </ul>
+                </div>
+            </div>
+        </footer>
     </div>
 
-    <!-- Login-Overlay NUR im Handy-Screen -->
-    <div class="screen">
-      <div id="loginOverlay">
-        <div class="login-bg"></div>
-        <div class="login-content">
-          <!-- NEUER Zeit-Bereich über dem Numpad -->
-          <div class="time-container">
-            <div class="lock-time" id="lockTime">00:00</div>
-            <div class="lock-subtext">Europe/Berlin</div>
-          </div>
+    <!-- Modals -->
+    <div id="impressumModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('impressumModal')">&times;</span>
+            <h2>Impressum</h2>
+            <div class="impressum-text">
+                <h3>Angaben gemäß § 5 TMG</h3>
+                <p>
+                    <strong>Betreiber:</strong><br>
+                    GabelSMP<br>
+                    [Deine Adresse]<br>
+                    [Postleitzahl] [Stadt]<br>
+                    Deutschland
+                </p>
+                
+                <h3>Kontakt</h3>
+                <p>
+                    <strong>E-Mail:</strong> [Deine E-Mail]
+                </p>
 
-          <h2>Die Zahl der Fenster ist halb so groß wie die Zahl der Tische.<br><br>Es gibt 2 Fenster mehr als Türen.<br><br>Die Zahl der Stühle ist dreifach so groß wie die Zahl der Fenster.<br><br>Es stehen 6 Tische im Raum.</h2>
-          <div class="pin-dots" id="pinDots">
-            <span class="dot"></span>
-            <span class="dot"></span>
-            <span class="dot"></span>
-            <span class="dot"></span>
-          </div>
-          <div class="login-message" id="loginMessage"></div>
-          <div class="numpad">
-            <button data-key="1">1</button>
-            <button data-key="2">2</button>
-            <button data-key="3">3</button>
-            <button data-key="4">4</button>
-            <button data-key="5">5</button>
-            <button data-key="6">6</button>
-            <button data-key="7">7</button>
-            <button data-key="8">8</button>
-            <button data-key="9">9</button>
-            <button data-action="clear">⌫</button>
-            <button data-key="0">0</button>
-            <button data-action="reset">↺</button>
-          </div>
+                <h3>Verantwortlich für den Inhalt nach § 55 Abs. 2 RStV</h3>
+                <p>
+                    [Dein Name]<br>
+                    [Deine Adresse]<br>
+                    [Postleitzahl] [Stadt]
+                </p>
+
+                <h3>Haftungsausschluss</h3>
+                <p>
+                    Die Inhalte dieser Website werden mit größter Sorgfalt erstellt. Für die Richtigkeit, Vollständigkeit und Aktualität der Inhalte können wir jedoch keine Gewähr übernehmen. Als Diensteanbieter sind wir für eigene Inhalte auf diesen Seiten nach allgemeinen Gesetzen verantwortlich.
+                </p>
+
+                <h3>Externe Links</h3>
+                <p>
+                    Diese Website enthält Links zu externen Websites Dritter. Für den Inhalt dieser externen Seiten sind wir nicht verantwortlich. Der Anbieter hat keine Kontrolle über die Inhalte der verlinkten Seiten und übernimmt keine Haftung dafür.
+                </p>
+
+                <h3>Urheberrecht</h3>
+                <p>
+                    Die auf dieser Website veröffentlichten Inhalte und Werke unterliegen dem deutschen Urheberrecht. Eine Vervielfältigung, Bearbeitung, Verbreitung und jede Art der Verwertung außerhalb der Grenzen des Urheberrechts bedürfen der schriftlichen Zustimmung des Autors oder Schöpfers.
+                </p>
+            </div>
         </div>
-      </div>
-
-      <div class="chat" id="chat"></div>
     </div>
 
-    <div class="options" id="optionsContainer">
-      <!-- Buttons werden per JS gesetzt -->
+    <div id="datenschutzModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('datenschutzModal')">&times;</span>
+            <h2>Datenschutzerklärung</h2>
+            <div class="datenschutz-text">
+                <h3>Datenschutz</h3>
+                <p>
+                    Wir nehmen den Schutz deiner persönlichen Daten sehr ernst. Diese Datenschutzerklärung erläutert, welche Informationen wir erfassen und wie wir sie verwenden.
+                </p>
+
+                <h3>Erfassung von Daten</h3>
+                <p>
+                    Diese Website erfasst keine persönlichen Daten von Besuchern. Es werden keine Cookies gespeichert, die persönliche Daten enthalten.
+                </p>
+
+                <h3>Analytics</h3>
+                <p>
+                    Diese Website nutzt möglicherweise Webanalyse-Dienste. Diese erfassen anonymisierte Daten über deine Nutzung der Website.
+                </p>
+
+                <h3>Links zu Social Media</h3>
+                <p>
+                    Diese Website enthält Links zu unserem Discord-Server. Bitte beachte die Datenschutzrichtlinien von Discord beim Besuch dieser Dienste.
+                </p>
+
+                <h3>Kontakt zum Datenschutz</h3>
+                <p>
+                    Für Fragen zum Datenschutz kontaktiere uns bitte unter: [Deine E-Mail]
+                </p>
+
+                <h3>Änderungen dieser Datenschutzerklärung</h3>
+                <p>
+                    Wir behalten uns das Recht vor, diese Datenschutzerklärung jederzeit zu ändern. Die aktuelle Version ist immer auf dieser Seite verfügbar.
+                </p>
+            </div>
+        </div>
     </div>
 
-    <!-- Input-Feld für Antworten -->
-    <div class="input-field-wrapper" id="inputFieldWrapper" style="display: none;">
-      <input type="text" id="userInput" placeholder="Deine Antwort..." class="user-input">
-      <button id="submitInput" class="submit-btn">Absenden</button>
-    </div>
-  </div>
+    <script src="script.js"></script>
 </body>
 </html>
